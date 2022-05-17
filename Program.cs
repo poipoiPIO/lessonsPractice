@@ -6,8 +6,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+var dataBase = new RouteDBase();
 
-var routeTable = new List<Route>(); // TODO:: Replace with DB
+var routeTable = dataBase.Base; // TODO:: Replace with DB
 
 if (app.Environment.IsDevelopment()) {
   app.UseSwagger();
@@ -15,6 +16,16 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseHttpsRedirection();
+
+app.MapGet("/info", () => {
+  Object info;
+  try {
+    info = dataBase.getInfo();
+  } catch(System.InvalidOperationException) {
+    return Results.NoContent();
+  }
+  return Results.Ok(info);
+});
 
 app.MapGet("/routes", () =>
     Results.Ok(routeTable));
