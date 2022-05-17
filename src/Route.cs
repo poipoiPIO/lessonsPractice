@@ -16,10 +16,10 @@ public class Route {
     (Name, ArrivalPoint, StartPoint, RouteLength, Driver) =
       (name, arrivalPoint, startPoint, routeLength, Driver);
 
-  private double calculateAproximateRouteTime() =>
+  public double calculateAproximateRouteTime() =>
     RouteLength / Driver.AverageSpeed;
 
-  private double calculateCost(double hourCost) =>
+  public double calculateCost() =>
     RouteLength > 1000 ?
       Driver.WorkHourCost * 1.25 * calculateAproximateRouteTime():
       Driver.WorkHourCost * calculateAproximateRouteTime();
@@ -28,6 +28,6 @@ public class Route {
     $"______The ROUTE______\n" +
     $"Name:             {Name}\n" +
     $"Approximate Time: {calculateAproximateRouteTime()} \n" +
-    $"Cost:             {calculateCost(Driver.WorkHourCost)}\n" +
+    $"Cost:             {calculateCost()}\n" +
     $"Driver:           {Driver.Name}";
 }

@@ -7,16 +7,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-var routeTable = new List<Route> {
-// TODO:: Replace with DB
-  new Route(
-    "Example Road",
-    "Celestia",
-    "GoverLand",
-    2001,
-    new Skinner("Victor", 10.1, 102.3)
-  )
-};
+var routeTable = new List<Route>(); // TODO:: Replace with DB
 
 if (app.Environment.IsDevelopment()) {
   app.UseSwagger();
@@ -28,10 +19,26 @@ app.UseHttpsRedirection();
 app.MapGet("/routes", () =>
     Results.Ok(routeTable));
 
+app.MapGet("/routes/moreInfo/{id}", (int id) => {
+  Route route; // Will stored queried elem if exist
+
+  try {
+    route = routeTable[id];
+  } catch(Exception e) {
+    Console.WriteLine(e);
+    return Results.NotFound();
+  }
+
+  return Results.Ok(new {
+    AproximateTime = route.calculateAproximateRouteTime(),
+    ApproximateCost = route.calculateCost()
+  });
+});
+
 app.MapGet("/routes/{id}", (int id) => {
   Route route; // Will stored queried elem if exist
 
-  try{
+  try {
     route = routeTable[id];
   } catch(Exception e) {
     Console.WriteLine(e);
